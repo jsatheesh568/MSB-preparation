@@ -1,0 +1,45 @@
+server:
+  port: 8080    # Gateway port
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true    # allows using serviceId in routes, if you want
+      routes:
+        # ORDER-SERVICE
+        - id: order-service
+          uri: lb://order-service      # lb:// means use LoadBalancer + Eureka
+          predicates:
+            - Path=/api/orders/**
+
+        # PRODUCT-SERVICE
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+
+        # USER-SERVICE (auth)
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

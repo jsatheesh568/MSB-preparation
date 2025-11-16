@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: order-service
+
   datasource:
     url: jdbc:h2:mem:orderdb;DB_CLOSE_DELAY=-1
     driverClassName: org.h2.Driver
@@ -14,7 +15,16 @@ spring:
       ddl-auto: update
     show-sql: true
 
-# URL to call product-service (can use Eureka when integrated)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+# Optional: keep only if you still want direct URL fallback (not needed for Feign + Eureka)
 product:
   service:
     url: http://localhost:9002

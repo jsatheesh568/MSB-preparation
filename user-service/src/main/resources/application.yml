@@ -1,10 +1,10 @@
-# src/main/resources/application.yml
 server:
   port: 9001
 
 spring:
   application:
     name: user-service
+
   datasource:
     url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
@@ -21,9 +21,22 @@ spring:
 
 eureka:
   client:
-    enabled: false  # set true if you run Eureka and want to register
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics,env
+
+# (Optional, to see more Eureka logs)
+logging:
+  level:
+    com.netflix.discovery: INFO
+    org.springframework.cloud.netflix.eureka: INFO
